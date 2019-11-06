@@ -132,8 +132,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Agent.cpp" />
+    <ClCompile Include="..\src\Connexion.cpp" />
+    <ClCompile Include="..\src\Graf.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\PathFollowing.cpp" />
     <ClCompile Include="..\src\ScenePathFindingMouse.cpp" />
     <ClCompile Include="..\src\SDL_SimpleApp.cpp" />
@@ -142,7 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Agent.h" />
+    <ClInclude Include="..\src\Connexion.h" />
+    <ClInclude Include="..\src\Graf.h" />
     <ClInclude Include="..\src\Grid.h" />
+    <ClInclude Include="..\src\Node.h" />
     <ClInclude Include="..\src\Path.h" />
     <ClInclude Include="..\src\PathFollowing.h" />
     <ClInclude Include="..\src\ScenePathFindingMouse.h" />
