@@ -3,6 +3,8 @@
 #include "Connexion.h"
 #include "Vector2D.h"
 
+class Connexion;
+
 class Node
 {
 private:
@@ -12,5 +14,8 @@ public:
 	Node();
 	Node(Vector2D position);
 	~Node();
+
+	Vector2D GetPosition();
+	void AddConnexion(Connexion conn);
 };
 

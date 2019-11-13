@@ -7,7 +7,10 @@
 #include "Path.h"
 #include "Vector2D.h"
 #include "utils.h"
+#include "Graf.h"
+#include "Grid.h"
 
+class Grid;
 
 class Agent
 {
@@ -40,6 +43,8 @@ private:
 	int sprite_w;
 	int sprite_h;
 
+	Graf graph;
+
 public:
 	Agent();
 	~Agent();
@@ -62,5 +67,6 @@ public:
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
-	
+	void InitializeGraph(Grid* grid);
+	Graf GetGraph();
 };

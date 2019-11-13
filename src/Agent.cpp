@@ -196,3 +196,40 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 
 	return true;
 }
+
+void Agent::InitializeGraph(Grid* grid)
+{
+	for (int i = 0; i < grid->getNumCellX(); i++)
+	{
+		for (int j = 0; j < grid->getNumCellY(); j++)
+		{
+			if (grid->isValidCell(Vector2D(i, j)))
+			{
+				//Comprovar
+				Node node(Vector2D(i, j));
+				Node* aux = new Node();
+				if (graph.GetNode(Vector2D(-i, j), aux))
+				{
+					 Connexion conn(&node, aux);
+					 node.AddConnexion(conn);
+					 aux->AddConnexion(conn);
+				}
+				if (graph.GetNode(Vector2D(i, -j), aux))
+				{
+					Connexion conn(&node, aux);
+					node.AddConnexion(conn);
+					aux->AddConnexion(conn);
+				}
+
+				graph.AddNode(node);
+			}
+		}
+	}
+}
+
+Graf Agent::GetGraph()
+{
+	return graph;
+}
+
+
