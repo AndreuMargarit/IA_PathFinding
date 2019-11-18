@@ -69,4 +69,6 @@ public:
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
 	void InitializeGraph(Grid* grid);
 	Graf GetGraph();
+
+
 };

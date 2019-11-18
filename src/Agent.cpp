@@ -207,18 +207,21 @@ void Agent::InitializeGraph(Grid* grid)
 			{
 				//Comprovar
 				Node node(Vector2D(i, j));
-				Node* aux = new Node();
-				if (graph.GetNode(Vector2D(-i, j), aux))
+				Node* aux = nullptr;
+				if (graph.CheckNode(Vector2D(i-1, j)))
 				{
-					 Connexion conn(&node, aux);
-					 node.AddConnexion(conn);
-					 aux->AddConnexion(conn);
-				}
-				if (graph.GetNode(Vector2D(i, -j), aux))
-				{
+					aux = graph.GetNode(Vector2D(i - 1, j));
 					Connexion conn(&node, aux);
 					node.AddConnexion(conn);
 					aux->AddConnexion(conn);
+				}
+				if (graph.CheckNode(Vector2D(i, j-1)))
+				{
+					aux = graph.GetNode(Vector2D(i, j - 1));
+					Connexion conn(&node, aux);
+					node.AddConnexion(conn);
+					aux->AddConnexion(conn);
+					//node.UpdateNode(aux)-> position = aux.position && connections = aux.connections;
 				}
 
 				graph.AddNode(node);

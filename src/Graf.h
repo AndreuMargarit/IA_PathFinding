@@ -13,7 +13,8 @@ private:
 public:
 	Graf();
 	~Graf();
-	bool GetNode(Vector2D position, Node* node);
+	Node* GetNode(Vector2D position);
+	bool CheckNode(Vector2D position);
 	void AddNode(Node node);
 	int GetGrafSize();
 };

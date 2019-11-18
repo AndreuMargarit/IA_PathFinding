@@ -9,13 +9,25 @@ Graf::~Graf()
 {
 }
 
-bool Graf::GetNode(Vector2D position, Node* node)
+
+Node* Graf::GetNode(Vector2D position)
 {
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		if (nodes[i].GetPosition() == position)
 		{
-			node = &nodes[i];
+			return &nodes[i];
+		}
+	}
+	return new Node();
+}
+
+bool Graf::CheckNode(Vector2D position)
+{
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		if (nodes[i].GetPosition() == position)
+		{
 			return true;
 		}
 	}
