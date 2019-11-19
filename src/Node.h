@@ -7,15 +7,15 @@ class Connexion;
 
 class Node
 {
-private:
-	std::vector<Connexion> connexions;
-	Vector2D position;
-public:
-	Node();
-	Node(Vector2D position);
-	~Node();
+	private:
+		std::vector<Connexion> connexions;
+		Vector2D position;
+	public:
+		Node();
+		Node(Vector2D position);
+		~Node();
 
-	Vector2D GetPosition();
-	void AddConnexion(Connexion conn);
+		Vector2D GetPosition();
+		void AddConnexion(Connexion conn);
 };
 

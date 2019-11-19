@@ -7,15 +7,14 @@
 
 class Graf
 {
-private:
-	//std::vector<Connexion> connexions;
-	std::vector<Node> nodes;
-public:
-	Graf();
-	~Graf();
-	Node* GetNode(Vector2D position);
-	bool CheckNode(Vector2D position);
-	void AddNode(Node node);
-	int GetGrafSize();
+	private:
+		std::vector<Node> nodes;
+	public:
+		Graf();
+		~Graf();
+		Node* GetNode(Vector2D position);
+		bool CheckNode(Vector2D position);
+		void AddNode(Node node);
+		int GetGrafSize();
 };
 

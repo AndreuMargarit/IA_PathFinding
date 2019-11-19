@@ -6,7 +6,9 @@ Node::Node()
 {
 }
 
-Node::Node(Vector2D _position) : position(_position){};
+Node::Node(Vector2D _position) : position(_position){
+	
+};
 
 Node::~Node()
 {

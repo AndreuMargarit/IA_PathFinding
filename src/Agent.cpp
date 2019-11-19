@@ -199,6 +199,8 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 
 void Agent::InitializeGraph(Grid* grid)
 {
+	Node node;
+	Node* aux;
 	for (int i = 0; i < grid->getNumCellX(); i++)
 	{
 		for (int j = 0; j < grid->getNumCellY(); j++)
@@ -206,8 +208,9 @@ void Agent::InitializeGraph(Grid* grid)
 			if (grid->isValidCell(Vector2D(i, j)))
 			{
 				//Comprovar
-				Node node(Vector2D(i, j));
-				Node* aux = nullptr;
+				node = Node(Vector2D(i, j));
+				aux = new Node();
+
 				if (graph.CheckNode(Vector2D(i-1, j)))
 				{
 					aux = graph.GetNode(Vector2D(i - 1, j));
@@ -215,7 +218,10 @@ void Agent::InitializeGraph(Grid* grid)
 					node.AddConnexion(conn);
 					aux->AddConnexion(conn);
 				}
-				if (graph.CheckNode(Vector2D(i, j-1)))
+
+				aux = new Node();
+
+				if (graph.CheckNode(Vector2D(i, j - 1)))
 				{
 					aux = graph.GetNode(Vector2D(i, j - 1));
 					Connexion conn(&node, aux);
