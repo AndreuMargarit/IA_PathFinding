@@ -12,6 +12,8 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	srand((unsigned int)time(NULL));
 
 	Agent *agent = new Agent;
+	agent->InitializeGraph(maze);
+	std::cout << agent->GetGraph().GetGrafSize() << std::endl;
 	agent->loadSpriteTexture("../res/soldier.png", 4);
 	agent->setBehavior(new PathFollowing);
 	agent->setTarget(Vector2D(-20,-20));
@@ -88,11 +90,25 @@ void ScenePathFindingMouse::draw()
 		for (int i = 0; i < SRC_WIDTH; i+=CELL_SIZE)
 		{
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), i, 0, i, SRC_HEIGHT);
+
 		}
 		for (int j = 0; j < SRC_HEIGHT; j = j += CELL_SIZE)
 		{
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), 0, j, SRC_WIDTH, j);
 		}
+	}
+
+	Graf graph = agents[0]->GetGraph();
+	Node* node;
+	for (int i = 0; i < SRC_WIDTH / CELL_SIZE; i++)
+	{
+		for (int j = 0; j < SRC_HEIGHT / CELL_SIZE; j++)
+			if (graph.CheckNode(Vector2D(i, j)))
+			{
+				node = graph.GetNode(Vector2D(i, j));
+				Vector2D aux = maze->cell2pix(node->GetPosition());
+				draw_circle(TheApp::Instance()->getRenderer(),aux.x , aux.y, 15, 255, 0, 0, 255);
+			}
 	}
 
 	agents[0]->draw();
