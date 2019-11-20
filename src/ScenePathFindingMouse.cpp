@@ -13,9 +13,10 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 
 	Agent *agent = new Agent;
 	agent->InitializeGraph(maze);
-	std::cout << agent->GetGraph().GetGrafSize() << std::endl;
 	agent->loadSpriteTexture("../res/soldier.png", 4);
 	agent->setBehavior(new PathFollowing);
+	agent->setAlgorithm(new BFS);
+
 	agent->setTarget(Vector2D(-20,-20));
 	agents.push_back(agent);
 
@@ -98,6 +99,8 @@ void ScenePathFindingMouse::draw()
 		}
 	}
 
+	//Draw all nodes of the gridd
+	/*
 	Graf graph = agents[0]->GetGraph();
 	Node* node;
 	for (int i = 0; i < SRC_WIDTH / CELL_SIZE; i++)
@@ -109,7 +112,7 @@ void ScenePathFindingMouse::draw()
 				Vector2D aux = maze->cell2pix(node->GetPosition());
 				draw_circle(TheApp::Instance()->getRenderer(),aux.x , aux.y, 15, 255, 0, 0, 255);
 			}
-	}
+	}*/
 
 	agents[0]->draw();
 }
