@@ -31,6 +31,11 @@ void Agent::setBehavior(SteeringBehavior *behavior)
 	steering_behaviour = behavior;
 }
 
+void Agent::setAlgorithm(PathfindingAlgorithm* algorithm)
+{
+	pathfinding_algorithm = algorithm;
+}
+
 Vector2D Agent::getPosition()
 {
 	return position;
@@ -60,6 +65,12 @@ float Agent::getMass()
 {
 	return mass;
 }
+
+Agent::PathfindingAlgorithm* Agent::getAlgorithm()
+{
+	return pathfinding_algorithm;
+}
+
 
 void Agent::setPosition(Vector2D _position)
 {

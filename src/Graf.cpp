@@ -41,3 +41,11 @@ int Graf::GetGrafSize()
 {
 	return nodes.size();
 }
+
+int Graf::GetIdNode(Node node) {
+	for (int i = 0; i < nodes.size(); i++) {
+		if (nodes[i].GetPosition() == node.GetPosition()) {
+			return i;
+		}
+	}
+}

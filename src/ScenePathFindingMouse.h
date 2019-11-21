@@ -8,6 +8,7 @@
 #include "Agent.h"
 #include "Seek.h"
 #include "PathFollowing.h"
+#include "BFS.h"
 #include "Grid.h"
 
 class ScenePathFindingMouse :
