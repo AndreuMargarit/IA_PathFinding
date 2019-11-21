@@ -14,7 +14,8 @@ Agent::Agent() : sprite_texture(0),
 				 sprite_num_frames(0),
 	             sprite_w(0),
 	             sprite_h(0),
-	             draw_sprite(false)
+	             draw_sprite(false),
+				 hasArrivedToTarget(true)
 {
 }
 
@@ -64,6 +65,16 @@ float Agent::getMaxForce()
 float Agent::getMass()
 {
 	return mass;
+}
+
+bool Agent::GetHasArrivedToTarget()
+{
+	return hasArrivedToTarget;
+}
+
+void Agent::SetHasArrivedToTarget(bool value)
+{
+	hasArrivedToTarget = value;
 }
 
 Agent::PathfindingAlgorithm* Agent::getAlgorithm()

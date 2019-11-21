@@ -50,6 +50,8 @@ private:
 	float max_force;
 	float max_velocity;
 
+	bool hasArrivedToTarget;
+
 	SDL_Texture *sprite_texture;
 	bool draw_sprite;
 	int sprite_num_frames;
@@ -67,6 +69,8 @@ public:
 	float getMaxVelocity();
 	float getMaxForce();
 	float getMass();
+	bool GetHasArrivedToTarget();
+	void SetHasArrivedToTarget(bool value);
 	Agent::PathfindingAlgorithm* getAlgorithm();
 	void setBehavior(SteeringBehavior *behavior);
 	void setAlgorithm(PathfindingAlgorithm *algorithm);

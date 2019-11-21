@@ -11,20 +11,23 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 
 	srand((unsigned int)time(NULL));
 	
+	agents.push_back(GenerateAgent(new GBFS, maze));
 	agents.push_back(GenerateAgent(new BFS, maze));
 
 	// set agent position coords to the center of a random cell
 	Vector2D rand_cell(-1,-1);
 	while (!maze->isValidCell(rand_cell))
 		rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-	agents[0]->setPosition(maze->cell2pix(rand_cell));
+
+	for (int i = 0; i < agents.size(); i++)
+		agents[i]->setPosition(maze->cell2pix(rand_cell));
 
 	// set the coin in a random cell (but at least 3 cells far from the agent)
 	coinPosition = Vector2D(-1,-1);
 	while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3))
 		coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
 
-	UpdatePathAlgorithm(agents[0], coinPosition, maze);
+	UpdateAllPaths();
 }
 
 ScenePathFindingMouse::~ScenePathFindingMouse()
@@ -48,7 +51,7 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 		if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
 			draw_grid = !draw_grid;
 		break;
-	case SDL_MOUSEMOTION:
+	/*case SDL_MOUSEMOTION:
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
 		{
@@ -57,23 +60,21 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 				agents[0]->addPathPoint(maze->cell2pix(cell));
 			}
 		}
-		break;
+		break;*/
 	default:
 		break;
 	}
-
-	agents[0]->update(dtime, event);
-
-	// if we have arrived to the coin, replace it in a random cell!
-	if ((agents[0]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[0]->getPosition()) == coinPosition))
-	{
-		coinPosition = Vector2D(-1, -1);
-		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition()))<3))
-			coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-
-		UpdatePathAlgorithm(agents[0], coinPosition, maze);
-	}
 	
+	for (int i = 0; i < agents.size(); i++) {
+		agents[i]->update(dtime, event);
+		// if we have arrived to the coin, replace it in a random cell!
+		if ((agents[i]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[i]->getPosition()) == coinPosition))
+		{
+			agents[i]->SetHasArrivedToTarget(true);
+		}
+	}
+
+	UpdateAllPaths();
 }
 
 void ScenePathFindingMouse::draw()
@@ -111,6 +112,7 @@ void ScenePathFindingMouse::draw()
 	}*/
 
 	agents[0]->draw();
+	agents[1]->draw();
 }
 
 const char* ScenePathFindingMouse::getTitle()
@@ -136,8 +138,6 @@ void ScenePathFindingMouse::drawMaze()
 			} else {
 				// Do not draw if it is not necessary (bg is already black)
 			}
-					
-			
 		}
 	}
 	//Alternative: render a backgroud texture:
@@ -189,12 +189,37 @@ Agent* ScenePathFindingMouse::GenerateAgent(Agent::PathfindingAlgorithm* pathfin
 
 }
 
-void ScenePathFindingMouse::UpdatePathAlgorithm(Agent* agent, Vector2D targetPosition, Grid* maze) {
+bool ScenePathFindingMouse::AllAgentsOnTarget() {
 
-	agent->getAlgorithm()->GeneratePath(agent->GetGraph(), maze->pix2cell(agent->getPosition()), targetPosition);
+	for (int i = 0; i < agents.size(); i++) {
+		if (!agents[i]->GetHasArrivedToTarget()) {
+			return false;
+		}
+	}
+	return true;
 
-	for (int i = 0; i < agent->getAlgorithm()->GetGeneratedPath().size(); i++) {
-		agent->addPathPoint(maze->cell2pix(agent->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
+}
+
+void ScenePathFindingMouse::UpdateAllPaths() {
+
+	if (AllAgentsOnTarget()) {
+		coinPosition = Vector2D(-1, -1);
+		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition())) < 3))
+			coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+
+		for (int i = 0; i < agents.size(); i++) {
+			UpdatePathAlgorithm(i);
+			agents[i]->SetHasArrivedToTarget(false);
+		}
+	}
+}
+
+void ScenePathFindingMouse::UpdatePathAlgorithm(int idAgent) {
+
+	agents[idAgent]->getAlgorithm()->GeneratePath(agents[idAgent]->GetGraph(), maze->pix2cell(agents[idAgent]->getPosition()), coinPosition);
+
+	for (int i = 0; i < agents[idAgent]->getAlgorithm()->GetGeneratedPath().size(); i++) {
+		agents[idAgent]->addPathPoint(maze->cell2pix(agents[idAgent]->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
 	}
 
 }
