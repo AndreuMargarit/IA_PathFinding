@@ -32,5 +32,6 @@ private:
 	SDL_Texture *background_texture;
 	SDL_Texture *coin_texture;
 	bool loadTextures(char* filename_bg, char* filename_coin);
-
+	Agent* GenerateAgent(Agent::PathfindingAlgorithm* pathfindingAlgorithm, Grid* maze);
+	void UpdatePathAlgorithm(Agent* agent, Vector2D targetPosition, Grid* maze);
 };
