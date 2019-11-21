@@ -28,9 +28,10 @@ public:
 	class PathfindingAlgorithm 
 	{
 	public:
-		std::vector<Node> generatedPath;
 		PathfindingAlgorithm() {};
 		virtual ~PathfindingAlgorithm() {};
+		virtual void GeneratePath(Graf graph, Vector2D startPosition, Vector2D targetPosition) {}; 
+		virtual std::vector<Node> GetGeneratedPath() { return std::vector<Node>(); };
 	};
 
 private:

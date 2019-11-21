@@ -17,5 +17,7 @@ class Node
 
 		Vector2D GetPosition();
 		void AddConnexion(Connexion conn);
+		int SizeConnexions();
+		Node* GetNeighbors();
 };
 

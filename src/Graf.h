@@ -4,7 +4,6 @@
 #include "Node.h"
 #include "Vector2D.h"
 
-
 class Graf
 {
 	private:
@@ -16,5 +15,7 @@ class Graf
 		bool CheckNode(Vector2D position);
 		void AddNode(Node node);
 		int GetGrafSize();
+		int GetIdNode(Node node);
+
 };
 

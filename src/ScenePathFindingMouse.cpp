@@ -16,8 +16,8 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	agent->loadSpriteTexture("../res/soldier.png", 4);
 	agent->setBehavior(new PathFollowing);
 	agent->setAlgorithm(new BFS);
-
 	agent->setTarget(Vector2D(-20,-20));
+	
 	agents.push_back(agent);
 
 	// set agent position coords to the center of a random cell
@@ -31,6 +31,11 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3))
 		coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
 
+	agents[0]->getAlgorithm()->GeneratePath(agents[0]->GetGraph(), maze->pix2cell(agents[0]->getPosition()), coinPosition);
+
+	for (int i = 0; i < agents[0]->getAlgorithm()->GetGeneratedPath().size(); i++) {
+		agents[0]->addPathPoint(maze->cell2pix(agents[0]->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
+	}
 }
 
 ScenePathFindingMouse::~ScenePathFindingMouse()
@@ -76,6 +81,12 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 		coinPosition = Vector2D(-1, -1);
 		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition()))<3))
 			coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+
+		agents[0]->getAlgorithm()->GeneratePath(agents[0]->GetGraph(), maze->pix2cell(agents[0]->getPosition()), coinPosition);
+
+		for (int i = 0; i < agents[0]->getAlgorithm()->GetGeneratedPath().size(); i++) {
+			agents[0]->addPathPoint(maze->cell2pix(agents[0]->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
+		}
 	}
 	
 }
@@ -155,7 +166,6 @@ void ScenePathFindingMouse::drawCoin()
 	SDL_Rect dstrect = {(int)coin_coords.x-offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE};
 	SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
 }
-
 
 bool ScenePathFindingMouse::loadTextures(char* filename_bg, char* filename_coin)
 {

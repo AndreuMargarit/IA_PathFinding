@@ -9,9 +9,12 @@
 class BFS : 
 	public Agent::PathfindingAlgorithm
 {
-public:
+private:
 	std::vector<Node> generatedPath;
+
+public:
 	BFS() {};
 	~BFS() {};
 	void GeneratePath(Graf graph, Vector2D startPosition, Vector2D targetPosition);
+	std::vector<Node> GetGeneratedPath();
 };

@@ -17,3 +17,11 @@ Connexion::Connexion(Node* n1, Node* n2, int w)
 Connexion::~Connexion()
 {
 }
+
+Node Connexion::GetNodeConexion(Node actualNode)
+{
+	if (nodes[0]->GetPosition() == actualNode.GetPosition())
+		return *nodes[1];
+	else
+		return *nodes[0];
+}
