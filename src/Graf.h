@@ -16,6 +16,6 @@ class Graf
 		void AddNode(Node node);
 		int GetGrafSize();
 		int GetIdNode(Node node);
-
+		int GetCost(Node n1, Node n2);
 };
 

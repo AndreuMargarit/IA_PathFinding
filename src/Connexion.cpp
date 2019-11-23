@@ -25,3 +25,13 @@ Node Connexion::GetNodeConexion(Node actualNode)
 	else
 		return *nodes[0];
 }
+
+Node Connexion::GetNodesConnected(int j)
+{
+	return *nodes[j];
+}
+
+int Connexion::GetWeight()
+{
+	return weight;
+}

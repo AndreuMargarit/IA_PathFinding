@@ -19,5 +19,6 @@ class Node
 		void AddConnexion(Connexion conn);
 		int SizeConnexions();
 		Node* GetNeighbors();
+		Connexion* GetConnexions();
 };
 

@@ -49,3 +49,19 @@ int Graf::GetIdNode(Node node) {
 		}
 	}
 }
+
+int Graf::GetCost(Node n1, Node n2)
+{
+	for (int i = 0; i < n1.SizeConnexions(); i++)
+	{
+		for (int j = 0; j < 2; j++) {
+			Connexion* connexions = &n1.GetConnexions()[i];
+			Node nodesConected = n1.GetConnexions()[i].GetNodesConnected(j);
+			Vector2D pos = n1.GetConnexions()[i].GetNodesConnected(j).GetPosition();
+			if (n2.GetPosition() == n1.GetConnexions()[i].GetNodesConnected(j).GetPosition()) {
+				return n1.GetConnexions()[i].GetWeight();
+			}
+		}
+	}
+	return 0;
+}

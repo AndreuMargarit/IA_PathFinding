@@ -38,3 +38,14 @@ Node* Node::GetNeighbors() {
 	return aux;
 
 }
+
+Connexion * Node::GetConnexions()
+{
+	Connexion* aux = new Connexion[connexions.size()];
+
+	for (int i = 0; i < connexions.size(); i++) {
+		aux[i] = connexions[i];
+	}
+
+	return aux;
+}
