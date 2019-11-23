@@ -10,11 +10,11 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	loadTextures("../res/maze.png", "../res/coin.png");
 
 	srand((unsigned int)time(NULL));
-	
-	//agents.push_back(GenerateAgent(new GBFS, maze));
-	//agents.push_back(GenerateAgent(new BFS, maze));
-	agents.push_back(GenerateAgent(new Dijkstra, maze));
-
+	/*
+	agents.push_back(GenerateAgent(new GBFS, maze));
+	agents.push_back(GenerateAgent(new BFS, maze));
+	agents.push_back(GenerateAgent(new Dijkstra, maze));*/
+	agents.push_back(GenerateAgent(new AStar, maze));
 	// set agent position coords to the center of a random cell
 	Vector2D rand_cell(-1,-1);
 	while (!maze->isValidCell(rand_cell))
@@ -111,8 +111,9 @@ void ScenePathFindingMouse::draw()
 				draw_circle(TheApp::Instance()->getRenderer(),aux.x , aux.y, 15, 255, 0, 0, 255);
 			}
 	}*/
-
-	agents[0]->draw();
+	for (int i = 0; i < agents.size(); i++) {
+		agents[i]->draw();
+	}
 }
 
 const char* ScenePathFindingMouse::getTitle()
