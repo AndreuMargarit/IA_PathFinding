@@ -11,8 +11,9 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 
 	srand((unsigned int)time(NULL));
 	
-	agents.push_back(GenerateAgent(new GBFS, maze));
-	agents.push_back(GenerateAgent(new BFS, maze));
+	//agents.push_back(GenerateAgent(new GBFS, maze));
+	//agents.push_back(GenerateAgent(new BFS, maze));
+	agents.push_back(GenerateAgent(new Dijkstra, maze));
 
 	// set agent position coords to the center of a random cell
 	Vector2D rand_cell(-1,-1);
@@ -112,7 +113,6 @@ void ScenePathFindingMouse::draw()
 	}*/
 
 	agents[0]->draw();
-	agents[1]->draw();
 }
 
 const char* ScenePathFindingMouse::getTitle()

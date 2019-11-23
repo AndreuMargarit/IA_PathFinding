@@ -18,7 +18,7 @@ void BFS::GeneratePath(Graf graph, Vector2D startPosition, Vector2D targetPositi
 			break;
 
 		nodesContainer = currentNode->GetNeighbors();
-
+		
 		for (int i = 0; i < currentNode->SizeConnexions(); i++) {
 			if (cameFrom.count(graph.GetIdNode(nodesContainer[i])) == 0) {
 				queue.push(graph.GetNode(nodesContainer[i].GetPosition()));

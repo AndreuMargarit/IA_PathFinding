@@ -134,6 +134,7 @@
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\BFS.cpp" />
     <ClCompile Include="..\src\Connexion.cpp" />
+    <ClCompile Include="..\src\Dijkstra.cpp" />
     <ClCompile Include="..\src\GBFS.cpp" />
     <ClCompile Include="..\src\Graf.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="..\src\Agent.h" />
     <ClInclude Include="..\src\BFS.h" />
     <ClInclude Include="..\src\Connexion.h" />
+    <ClInclude Include="..\src\Dijkstra.h" />
     <ClInclude Include="..\src\GBFS.h" />
     <ClInclude Include="..\src\Graf.h" />
     <ClInclude Include="..\src\Grid.h" />
