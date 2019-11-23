@@ -28,10 +28,7 @@ void Dijkstra::GeneratePath(Graf graph, Vector2D startPosition, Vector2D targetP
 		priority_queue.pop();
 
 		if (currentNode->GetPosition() == targetPosition)
-		{
-			int x = 0;
 			break;
-		}
 		 
 		nodesContainer = currentNode->GetNeighbors();
 		int newCost;
@@ -40,7 +37,7 @@ void Dijkstra::GeneratePath(Graf graph, Vector2D startPosition, Vector2D targetP
 			newCost = costSoFar[graph.GetIdNode(*currentNode)] + graph.GetCost(*currentNode, nodesContainer[i]);
 			if (costSoFar.count(graph.GetIdNode(nodesContainer[i])) == 0 || newCost < costSoFar[graph.GetIdNode(nodesContainer[i])]) {
 				costSoFar[graph.GetIdNode(nodesContainer[i])] = newCost;
-				priority_queue.push({ newCost, &nodesContainer[i] });
+				priority_queue.push({ newCost, graph.GetNode(nodesContainer[i].GetPosition()) });
 				cameFrom[graph.GetIdNode(nodesContainer[i])] = currentNode;
 			}
 		}
