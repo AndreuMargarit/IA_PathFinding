@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -25,7 +26,9 @@ public:
 	const char* getTitle();
 private:
 	std::vector<Agent*> agents;
-	Vector2D coinPosition;
+	Vector2D* coinPosition;
+	const int numCoins = 1;
+	int* idsAlreadyPicked;
 
 	Grid *maze;
 	bool draw_grid;
@@ -38,5 +41,8 @@ private:
 	bool AllAgentsOnTarget();
 	void UpdateAllPaths();
 	Agent* GenerateAgent(Agent::PathfindingAlgorithm* pathfindingAlgorithm, Grid* maze);
-	void UpdatePathAlgorithm(int idAgent);
+	void UpdatePathAlgorithm(int idAgent); 
+	void GenerateCoinPositions();
+	int GetNextTargetId(int actualID);
+	bool IdIsAlreadyPicked(int idToCheck);
 };
