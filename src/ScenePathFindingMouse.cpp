@@ -10,11 +10,12 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	loadTextures("../res/maze.png", "../res/coin.png");
 
 	srand((unsigned int)time(NULL));
-	/*
+
 	agents.push_back(GenerateAgent(new GBFS, maze));
 	agents.push_back(GenerateAgent(new BFS, maze));
-	agents.push_back(GenerateAgent(new Dijkstra, maze));*/
+	agents.push_back(GenerateAgent(new Dijkstra, maze));
 	agents.push_back(GenerateAgent(new AStar, maze));
+
 	// set agent position coords to the center of a random cell
 	Vector2D rand_cell(-1,-1);
 	while (!maze->isValidCell(rand_cell))
@@ -23,10 +24,8 @@ ScenePathFindingMouse::ScenePathFindingMouse()
 	for (int i = 0; i < agents.size(); i++)
 		agents[i]->setPosition(maze->cell2pix(rand_cell));
 
-	// set the coin in a random cell (but at least 3 cells far from the agent)
-	coinPosition = Vector2D(-1,-1);
-	while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3))
-		coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+	idsAlreadyPicked = new int[numCoins];
+	coinPosition = new Vector2D[numCoins];
 
 	UpdateAllPaths();
 }
@@ -52,24 +51,14 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 		if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
 			draw_grid = !draw_grid;
 		break;
-	/*case SDL_MOUSEMOTION:
-	case SDL_MOUSEBUTTONDOWN:
-		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			Vector2D cell = maze->pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
-			if (maze->isValidCell(cell)) {
-				agents[0]->addPathPoint(maze->cell2pix(cell));
-			}
-		}
-		break;*/
 	default:
 		break;
 	}
-	
+
 	for (int i = 0; i < agents.size(); i++) {
 		agents[i]->update(dtime, event);
 		// if we have arrived to the coin, replace it in a random cell!
-		if ((agents[i]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[i]->getPosition()) == coinPosition))
+		if ((agents[i]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[i]->getPosition()) == coinPosition[numCoins - 1]))
 		{
 			agents[i]->SetHasArrivedToTarget(true);
 		}
@@ -97,20 +86,6 @@ void ScenePathFindingMouse::draw()
 		}
 	}
 
-	//Draw all nodes of the gridd
-	/*
-	Graf graph = agents[0]->GetGraph();
-	Node* node;
-	for (int i = 0; i < SRC_WIDTH / CELL_SIZE; i++)
-	{
-		for (int j = 0; j < SRC_HEIGHT / CELL_SIZE; j++)
-			if (graph.CheckNode(Vector2D(i, j)))
-			{
-				node = graph.GetNode(Vector2D(i, j));
-				Vector2D aux = maze->cell2pix(node->GetPosition());
-				draw_circle(TheApp::Instance()->getRenderer(),aux.x , aux.y, 15, 255, 0, 0, 255);
-			}
-	}*/
 	for (int i = 0; i < agents.size(); i++) {
 		agents[i]->draw();
 	}
@@ -147,10 +122,12 @@ void ScenePathFindingMouse::drawMaze()
 
 void ScenePathFindingMouse::drawCoin()
 {
-	Vector2D coin_coords = maze->cell2pix(coinPosition);
-	int offset = CELL_SIZE / 2;
-	SDL_Rect dstrect = {(int)coin_coords.x-offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE};
-	SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
+	for (int i = 0; i < coinPosition->Length(); i++) {
+		Vector2D coin_coords = maze->cell2pix(coinPosition[i]);
+		int offset = CELL_SIZE / 2;
+		SDL_Rect dstrect = { (int)coin_coords.x - offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE };
+		SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
+	}
 }
 
 bool ScenePathFindingMouse::loadTextures(char* filename_bg, char* filename_coin)
@@ -204,11 +181,10 @@ bool ScenePathFindingMouse::AllAgentsOnTarget() {
 void ScenePathFindingMouse::UpdateAllPaths() {
 
 	if (AllAgentsOnTarget()) {
-		coinPosition = Vector2D(-1, -1);
-		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition())) < 3))
-			coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+		GenerateCoinPositions();
 
 		for (int i = 0; i < agents.size(); i++) {
+			idsAlreadyPicked = new int[numCoins];
 			UpdatePathAlgorithm(i);
 			agents[i]->SetHasArrivedToTarget(false);
 		}
@@ -217,10 +193,69 @@ void ScenePathFindingMouse::UpdateAllPaths() {
 
 void ScenePathFindingMouse::UpdatePathAlgorithm(int idAgent) {
 
-	agents[idAgent]->getAlgorithm()->GeneratePath(agents[idAgent]->GetGraph(), maze->pix2cell(agents[idAgent]->getPosition()), coinPosition);
+	for (int i = 0; i < numCoins; i++) {
+		if (i == 0)
+			agents[idAgent]->getAlgorithm()->GeneratePath(agents[idAgent]->GetGraph(), maze->pix2cell(agents[idAgent]->getPosition()), coinPosition[GetNextTargetId(i)]);
+		else
+			agents[idAgent]->getAlgorithm()->GeneratePath(agents[idAgent]->GetGraph(), maze->pix2cell(agents[idAgent]->getPathPoint(agents[idAgent]->getPathSize() - 1)), coinPosition[GetNextTargetId(i)]);
 
-	for (int i = 0; i < agents[idAgent]->getAlgorithm()->GetGeneratedPath().size(); i++) {
-		agents[idAgent]->addPathPoint(maze->cell2pix(agents[idAgent]->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
+		for (int i = 0; i < agents[idAgent]->getAlgorithm()->GetGeneratedPath().size(); i++) {
+			agents[idAgent]->addPathPoint(maze->cell2pix(agents[idAgent]->getAlgorithm()->GetGeneratedPath()[i].GetPosition()));
+		}
+	}
+}
+
+void ScenePathFindingMouse::GenerateCoinPositions() {
+	// set the coin in a random cell (but at least 3 cells far from the agent)
+	for (int i = 0; i < numCoins; i++) {
+
+		while ((!maze->isValidCell(coinPosition[i])) || (Vector2D::Distance(coinPosition[i], maze->pix2cell(agents[0]->getPosition())) < 3))
+			coinPosition[i] = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+	}
+}
+
+int ScenePathFindingMouse::GetNextTargetId(int actualID) {
+
+	float calculatedDistance;
+	float closestCoin; 
+	float idClosestCoin = 0;
+
+	if (actualID == 0) {
+
+		closestCoin = Vector2D::Distance(maze->pix2cell(agents[0]->getPosition()), coinPosition[0]);
+
+		for (int i = 1; i < numCoins; i++) {
+			calculatedDistance = Vector2D::Distance(maze->pix2cell(agents[0]->getPosition()), coinPosition[i]);
+			if (calculatedDistance < closestCoin) {
+				closestCoin = calculatedDistance;
+				idClosestCoin = i;
+			}
+		}
+	}
+	else {
+
+		closestCoin = 1000;
+
+		for (int i = 0; i < numCoins; i++) {
+			if (i != idsAlreadyPicked[actualID - 1] && !IdIsAlreadyPicked(i)) {
+				calculatedDistance = Vector2D::Distance(coinPosition[idsAlreadyPicked[actualID - 1]], coinPosition[i]);
+				if (calculatedDistance < closestCoin) {
+					closestCoin = calculatedDistance;
+					idClosestCoin = i;
+				}
+			}
+		}
 	}
 
+	idsAlreadyPicked[actualID] = idClosestCoin;
+	return idClosestCoin;
 }
+
+bool ScenePathFindingMouse::IdIsAlreadyPicked(int idToCheck) {
+	for (int i = 0; i < numCoins; i++) {
+		if (idsAlreadyPicked[i] == idToCheck)
+			return true;
+	}
+	return false;
+}
+
